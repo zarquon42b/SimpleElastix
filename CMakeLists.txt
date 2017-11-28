@@ -91,12 +91,20 @@ list(APPEND SimpleITK_PRIVATE_COMPILE_OPTIONS ${CXX_ADDITIONAL_WARNING_FLAGS})
 find_package(Elastix REQUIRED)
 include(${ELASTIX_USE_FILE})
 
-if(ELASTIX_USE_OPENMP)
+option(SimpleITK_OPENMP "Speed up certain elastix components with OpenMP." ${ELASTIX_USE_OPENMP})
+mark_as_advanced(SimpleITK_OPENMP)
+if(SimpleITK_OPENMP)
   find_package(OpenMP QUIET)
-  if( OPENMP_FOUND )
+  if(OPENMP_FOUND)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
   endif()
+endif()
+
+option(SimpleITK_OPENCL "Build elastix OpenCL components." ${ELASTIX_USE_OPENCL})
+mark_as_advanced(SimpleITK_OPENCL)
+if(SimpleITK_OPENCL)
+  find_package(OpenCL REQUIRED)
 endif()
 
 # Check if libraries are available
@@ -161,6 +169,11 @@ set ( SimpleITK_INCLUDE_DIRS
       )
 
 set ( SimpleITK_LIBRARIES SimpleITKCommon SimpleITKIO SimpleITKRegistration ElastixImageFilter TransformixImageFilter )
+
+if( SimpleITK_OPENCL )
+  find_package( OpenCL REQUIRED )
+  list( APPEND SimpleITK_LIBRARIES ${OpenCL_LIBRARIES} )
+endif()
 
 if (SimpleITK_EXPLICIT_INSTANTIATION)
   list ( APPEND SimpleITK_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/Code/Explicit/include )

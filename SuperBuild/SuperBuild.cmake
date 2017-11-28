@@ -132,7 +132,7 @@ sitk_legacy_naming(SimpleITK_GIT_PROTOCOL)
 # SimpleITK options
 #------------------------------------------------------------------------------
 
-option( BUILD_EXAMPLES "Enable Building of the SimpleElastix Examples as a separate project." ON )
+option( BUILD_EXAMPLES "Enable Building of the SimpleITK Examples as a separate project." ON )
 
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -378,27 +378,19 @@ if(SimpleITK_USE_SYSTEM_ELASTIX)
   include(${ELASTIX_USE_FILE})
 
   if(ELASTIX_USE_OPENMP)
-    find_package(OpenMP QUIET)
-    if( OPENMP_FOUND )
-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    endif()
+    set(SimpleITK_OPENMP ON)
+  endif()
+
+  if(ELASTIX_USE_OPENCL)
+    set(SimpleITK_OPENCL ON)
   endif()
 else()
-  mark_as_advanced( SimpleElastix_OPENMP )
-  option( SimpleElastix_OPENMP "If available, use OpenMP to speed up certain elastix computations." OFF )
+  option(SimpleITK_OPENMP "If available, use OpenMP to speed up certain elastix computations." OFF)
+  mark_as_advanced(SimpleITK_OPENMP)
 
-  if(SimpleElastix_OPENMP)
-    find_package(OpenMP QUIET)
-    if(OPENMP_FOUND)
-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    endif()
-  endif()
+  option(SimpleITK_OPENCL "Build Elastix OpenCL components." OFF)
+  mark_as_advanced(SimpleITK_OPENCL)
 
-  mark_as_advanced( SimpleElastix_OPENCL )
-  option( SimpleElastix_OPENCL "Build Elastaix OpenCL components." OFF )
-  
   include(External_Elastix)
   list(APPEND ${CMAKE_PROJECT_NAME}_DEPENDENCIES Elastix)
 endif()
