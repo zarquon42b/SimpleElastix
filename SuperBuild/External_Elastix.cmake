@@ -80,6 +80,9 @@ ExternalProject_Add( ${proj}
   -DUSE_NearestNeighborResampleInterpolator:BOOL=ON                                           
   -DUSE_NormalizedGradientCorrelationMetric:BOOL=ON                                           
   -DUSE_NormalizedMutualInformationMetric:BOOL=ON
+  -DUSE_OpenCLFixedGenericPyramid:BOOL=${SimpleITK_OPENCL}
+  -DUSE_OpenCLMovingGenericPyramid:BOOL=${SimpleITK_OPENCL}
+  -DUSE_OpenCLResampler:BOOL=${SimpleITK_OPENCL}
   -DUSE_PCAMetric:BOOL=ON
   -DUSE_PCAMetric2:BOOL=ON                                   
   -DUSE_PatternIntensityMetric:BOOL=OFF                                           
